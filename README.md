@@ -14,7 +14,7 @@ Toolchain : aarch64-none-elf- (/!\ not changed in the Makefile yet !)
 - The FreeRTOS version has been updated to the last version (9.0.0) to work with the architecture of the Cortex-A53
 
 - It seem that the compiler arm-none-eabi is unable to use some 64bits features. Has been changed for :
-gcc-aarch64-linux-gnu
+gcc-aarch64-linux-gnu (/!\ need to be change for aarch64-none-elf-)
 
 - Assembly deprecated commands have been changed by the armv8 ones
 
