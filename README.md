@@ -1,11 +1,11 @@
 # FreeRTOS Ported to Raspberry Pi 3
 
-##Howto Build
+## Howto Build
 
 Type make!
 Toolchain : aarch64-none-elf- (/!\ not changed in the Makefile yet !)
 
-##ABOUT FREERTOS PORT
+## ABOUT FREERTOS PORT
 
 - Raspberry Pi 3 uses the BCM2837 wich has the same base address that the previous one (BCM2836 -> BaseAddress=0x3F000000)
 
@@ -21,7 +21,7 @@ gcc-aarch64-linux-gnu
 - Some function have been deprecated in FreeRTOS 9 : some v*****() functions can be replaced by x*****()
 
 
-###TODO:
+### TODO:
 
 -find a way to implement the _freertos_vector_table variable (used in portASM.S)
 
@@ -33,7 +33,7 @@ gcc-aarch64-linux-gnu
 
 -check the startup file
 
-###Please refer to:
+### Please refer to:
 
 Raspberry documentation:
 	-	https://github.com/raspberrypi/documentation
@@ -58,7 +58,7 @@ Porting to 64:
 
 - Put the compiled u-boot.bin in the boot partition as "uboot.img" and copy all the content of the raspberry boot firmware into the boot partition (a working exemple of boot is available in the "Working_Uboot" directory)
 
-###Please refer to:
+### Please refer to:
 
 U-boot compiling tutorial:
 	-	"HOWTO_ubootRasp3.pdf" file
