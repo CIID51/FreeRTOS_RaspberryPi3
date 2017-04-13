@@ -1,33 +1,67 @@
-# FreeRTOS Ported to Raspberry Pi
+# FreeRTOS Ported to Raspberry Pi 3
 
-This provides a very basic port of FreeRTOS to Raspberry pi.
+##Howto Build
 
-## Howto Build
+Type make!
+Toolchain : aarch64-none-elf- (/!\ not changed in the Makefile yet !)
 
-Type make! -- If you get an error then:
+##ABOUT FREERTOS PORT
 
-    $ cd .dbuild/pretty
-    $ chmod +x *.py
+- Raspberry Pi 3 uses the BCM2837 wich has the same base address that the previous one (BCM2836 -> BaseAddress=0x3F000000)
 
-Currently the makefile expect an arm-none-eabi- toolchain in the path. Either export the path to yours or
-modify the TOOLCHAIN variable in dbuild.config.mk file.
+- There was another FreeRTOS_Config.h file which overcame the good one
 
-You may also need to modify the library locations in the Makefile:
+- The FreeRTOS version has been updated to work with the architecture of the Cortex-A53
 
-    kernel.elf: LDFLAGS += -L"c:/yagarto/lib/gcc/arm-none-eabi/4.7.1/" -lgcc
-    kernel.elf: LDFLAGS += -L"c:/yagarto/arm-none-eabi/lib/" -lc
+- It seem that the compiler arm-none-eabi is unable to use some 64bits features. Has been changed for :
+gcc-aarch64-linux-gnu
 
-The build system also expects find your python interpreter by using /usr/bin/env python,
-if this doesn't work you will get problems.
+- Assembly deprecated commands have been changed by the armv8 ones
 
-To resolve this, modify the #! lines in the .dbuild/pretty/*.py files.
+- Some function have been deprecated in FreeRTOS 9 : some v*****() functions can be replaced by x*****()
 
-Hope this helps.
 
-I'm currently porting my BitThunder project to the Pi, which is a OS based on FreeRTOS
-but with a comprehensive driver model, and file-systems etc.
+###TODO:
 
-http://github.com/jameswalmsley/bitthunder/
+-find a way to implement the _freertos_vector_table variable (used in portASM.S)
 
-James
+-write the timer functions in the FreeRTOSTimers file
 
+-find out where is the new implementation of vPortYieldProcessor and create it if it does not exist
+
+-check the addresses configuraton in FreeRTOS_config
+
+-check the startup file
+
+###Please refer to:
+
+Raspberry documentation:
+	-	https://github.com/raspberrypi/documentation
+
+Porting to 64:
+	-	"Porting to ARM 64-bit.pdf" file
+	-	http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0024a/ch08s02s01.html
+
+## ABOUT UBOOT
+
+- The u-boot need to be compile with the toolchain "aarch64-none-elf-" (available on http://wiki.osdev.org/GCC_Cross-Compiler) to work with the last raspberry firmware and in 64 mode.
+
+- The following options must be set in the config.txt file:
+	# ARMv8
+	arm_control=0x200
+
+	# Uart
+	enable_uart=1
+
+	# Kernel name
+	kernel=uboot.img	
+
+- Put the compiled u-boot.bin in the boot partition as "uboot.img" and copy all the content of the raspberry boot firmware into the boot partition (a working exemple of boot is available in the "Working_Uboot" directory)
+
+###Please refer to:
+
+U-boot compiling tutorial:
+	-	"HOWTO_ubootRasp3.pdf" file
+
+Raspberry boot firmware:
+	-	https://github.com/raspberrypi/firmware/tree/master/boot
