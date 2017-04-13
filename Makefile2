@@ -1,0 +1,47 @@
+CROSS_COMPILE=arm-none-eabi-
+XEN_PREFIX=/usr
+
+RTOS_SOURCE=Source
+DEMO_SOURCE=Demo
+PORT=Source/portable/GCC/RaspberryPi
+
+DEBUG=
+OPTIMIZE=
+
+CC=$(CROSS_COMPILE)gcc
+AR=$(CROSS_COMPILE)ar
+
+CFLAGS= $(DEBUG) $(OPTIMIZE) \
+	-Wall \
+	-Werror \
+	-mcpu=cortex-a8 \
+
+CSOURCES= \
+	$(DEMO_SOURCE)/main.c \
+	$(DEMO_SOURCE)/gpio.c \
+	$(DEMO_SOURCE)/irq.c \
+	$(DEMO_SOURCE)/uart.c \
+	$(RTOS_SOURCE)/list.c \
+	$(RTOS_SOURCE)/queue.c \
+	$(RTOS_SOURCE)/tasks.c \
+	$(RTOS_SOURCE)/portable/MemMang/heap_4.c \
+	$(PORT)/port.c
+
+AFLAGS= -mcpu=cortex-a7
+
+ASOURCES= \
+	  $(PORT)/portASM.S
+
+COBJS = $(CSOURCES:.c=.o)
+AOBJS = $(ASOURCES:.S=.o)
+
+FreeRTOS.a: $(AOBJS) $(COBJS)
+	$(MAKE) -C CC=$(CC) AR=$(AR)
+	$(AR) r FreeRTOS.a $(AOBJS) $(COBJS) $(FDT_OBJS)
+
+$(COBJS): %.o : %.c Makefile $(DEMO_SOURCE)/FreeRTOSConfig.h
+	$(CC) -c $(CFLAGS) $*.c -o $*.o
+
+$(AOBJS): %.o : %.s Makefile $(DEMO_SOURCE)/FreeRTOSConfig.h
+	$(CC) -c $(CFLAGS) -x assembler-with-cpp $*.s -o $*.o
+

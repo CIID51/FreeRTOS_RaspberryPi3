@@ -1,0 +1,9 @@
+# ARMv8
+arm_control=0x200
+
+# Uart
+enable_uart=1
+
+# Kernel name
+kernel=uboot.img
+
