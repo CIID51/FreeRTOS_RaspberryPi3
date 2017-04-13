@@ -47,13 +47,13 @@ Porting to 64:
 - The u-boot need to be compile with the toolchain "aarch64-none-elf-" (available on http://wiki.osdev.org/GCC_Cross-Compiler) to work with the last raspberry firmware and in 64 mode.
 
 - The following options must be set in the config.txt file:
-	# ARMv8
+	\# ARMv8
 	arm_control=0x200
 
-	# Uart
+	\# Uart
 	enable_uart=1
 
-	# Kernel name
+	\# Kernel name
 	kernel=uboot.img	
 
 - Put the compiled u-boot.bin in the boot partition as "uboot.img" and copy all the content of the raspberry boot firmware into the boot partition (a working exemple of boot is available in the "Working_Uboot" directory)
